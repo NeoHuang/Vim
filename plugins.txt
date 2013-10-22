@@ -1,0 +1,8 @@
+surround.vim surround parentheses, brackets, quotes, xml tags
+repeat.vim repeat Visual command
+matchit.vim find match for current "if" " while"....
+ragtag.vim autocomplete closing tag
+a.vim switch between header and source files
+snipmate.vim spippets plugin
+NERDTree.vim tree view of a project
+projects.vim another tree view of a project
