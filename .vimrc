@@ -15,7 +15,7 @@ inoremap {}	{}
 inoremap (	()<Left>
 inoremap (<CR>	(<CR>)<Esc>O
 inoremap ((	(
-inoremap ()	() 
+inoremap ()	()
 set hlsearch
 set nobackup
 set noswapfile
