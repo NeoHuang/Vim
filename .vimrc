@@ -12,6 +12,10 @@ inoremap {	{}<Left>
 inoremap {<CR>	{<CR>}<Esc>O
 inoremap {{	{
 inoremap {}	{} 
+inoremap (	()<Left>
+inoremap (<CR>	(<CR>)<Esc>O
+inoremap ((	(
+inoremap ()	() 
 set hlsearch
 set nobackup
 set noswapfile
@@ -21,3 +25,4 @@ if has("autocmd")
  au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
 endif
 colorscheme codeschool
+
