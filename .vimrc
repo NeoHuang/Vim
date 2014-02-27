@@ -8,6 +8,7 @@ syntax on
 set expandtab
 set tabstop=2
 set shiftwidth=2
+let mapleader=","
 inoremap {	{}<Left>
 inoremap {<CR>	{<CR>}<Esc>O
 inoremap {{	{
@@ -27,4 +28,10 @@ if has("autocmd") && !has("win32")
 endif
 call pathogen#infect()
 colorscheme codeschool
+function! Startup()
+  if 0 == argc()
+    NERDTree
+  endif
+endfunction
 
+autocmd VimEnter * call Startup()
