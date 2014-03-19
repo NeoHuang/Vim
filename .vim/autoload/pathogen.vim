@@ -5,7 +5,7 @@
 " Install in ~/.vim/autoload (or ~\vimfiles\autoload).
 "
 " For management of individually installed plugins in ~/.vim/bundle (or
-" ~\vimfiles\bundle), adding `call pathogen#infect()` to the top of your
+" ~\vimfiles\bundle), adding `execute pathogen#infect()` to the top of your
 " .vimrc is the only other setup necessary.
 "
 " The API is documented inline below.  For maximum ease of reading,
@@ -17,11 +17,9 @@ endif
 let g:loaded_pathogen = 1
 
 function! s:warn(msg)
-  if &verbose
-    echohl WarningMsg
-    echomsg a:msg
-    echohl NONE
-  endif
+  echohl WarningMsg
+  echomsg a:msg
+  echohl NONE
 endfunction
 
 " Point of entry for basic default usage.  Give a relative path to invoke
@@ -30,7 +28,7 @@ endfunction
 " does not end in {} or * is given to pathogen#runtime_prepend_subdirectories()
 " instead.
 function! pathogen#infect(...) abort " {{{1
-  for path in a:0 ? reverse(copy(a:000)) : ['bundle/{}']
+  for path in a:0 ? filter(reverse(copy(a:000)), 'type(v:val) == type("")') : ['bundle/{}']
     if path =~# '^[^\\/]\+$'
       call s:warn('Change pathogen#infect('.string(path).') to pathogen#infect('.string(path.'/{}').')')
       call pathogen#incubate(path . '/{}')
@@ -109,6 +107,10 @@ function! pathogen#separator() abort " {{{1
   return !exists("+shellslash") || &shellslash ? '/' : '\'
 endfunction " }}}1
 
+function! pathogen#slash() abort " {{{1
+  return pathogen#separator()
+endfunction " }}}1
+
 " Convenience wrapper around glob() which returns a list.
 function! pathogen#glob(pattern) abort " {{{1
   let files = split(glob(a:pattern),"\n")
@@ -180,21 +182,21 @@ endfunction " }}}1
 function! pathogen#incubate(...) abort " {{{1
   let sep = pathogen#separator()
   let name = a:0 ? a:1 : 'bundle/{}'
-  if "\n".s:done_bundles =~# "\\M\n".name."\n"
+  if has_key(s:done_bundles, name)
     return ""
   endif
-  let s:done_bundles .= name . "\n"
+  let s:done_bundles[name] = 1
   let list = []
   for dir in pathogen#split(&rtp)
     if dir =~# '\<after$'
       if name =~# '{}$'
-        let list +=  filter(pathogen#glob_directories(substitute(dir,'after$',name[0:-3],'').'*[^~]'.sep.'after'), '!pathogen#is_disabled(v:val[0:-7])') + [dir]
+        let list +=  filter(pathogen#glob_directories(substitute(dir,'after$',name[0:-3],'').'*'.sep.'after'), '!pathogen#is_disabled(v:val[0:-7])') + [dir]
       else
         let list += [dir, substitute(dir, 'after$', '', '') . name . sep . 'after']
       endif
     else
       if name =~# '{}$'
-        let list +=  [dir] + filter(pathogen#glob_directories(dir.sep.name[0:-3].'*[^~]'), '!pathogen#is_disabled(v:val)')
+        let list +=  [dir] + filter(pathogen#glob_directories(dir.sep.name[0:-3].'*'), '!pathogen#is_disabled(v:val)')
       else
         let list += [dir . sep . name, dir]
       endif
@@ -214,16 +216,17 @@ function! pathogen#runtime_append_all_bundles(...) abort " {{{1
   return call('pathogen#incubate', map(copy(a:000),'v:val . "/{}"'))
 endfunction
 
-let s:done_bundles = ''
+let s:done_bundles = {}
+
 " }}}1
 
 " Invoke :helptags on all non-$VIM doc directories in runtimepath.
 function! pathogen#helptags() abort " {{{1
   let sep = pathogen#separator()
   for glob in pathogen#split(&rtp)
-    for dir in split(glob(glob), "\n")
-      if (dir.sep)[0 : strlen($VIMRUNTIME)] !=# $VIMRUNTIME.sep && filewritable(dir.sep.'doc') == 2 && !empty(filter(split(glob(dir.sep.'doc'.sep.'*'),"\n>"),'!isdirectory(v:val)')) && (!filereadable(dir.sep.'doc'.sep.'tags') || filewritable(dir.sep.'doc'.sep.'tags'))
-        helptags `=dir.'/doc'`
+    for dir in map(split(glob(glob), "\n"), 'v:val.sep."/doc/".sep')
+      if (dir)[0 : strlen($VIMRUNTIME)] !=# $VIMRUNTIME.sep && filewritable(dir) == 2 && !empty(split(glob(dir.'*.txt'))) && (!filereadable(dir.'tags') || filewritable(dir.'tags'))
+        silent! execute 'helptags' pathogen#fnameescape(dir)
       endif
     endfor
   endfor

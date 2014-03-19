@@ -14,12 +14,13 @@ if has("win32")
 else
 	set fileencoding=utf-8
 endif
+execute pathogen#infect()
+syntax on
 set number
 filetype on
 filetype plugin on
 filetype indent on
 
-syntax on
 set expandtab
 set tabstop=2
 set shiftwidth=2
