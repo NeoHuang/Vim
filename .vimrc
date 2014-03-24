@@ -1,18 +1,18 @@
 set langmenu=en
 if has("multi_byte")
-	set encoding=utf-8
-	set fileencoding=utf-8
-	set bomb
-	set termencoding=utf-8
-	set fileencodings=utf-8,chinese,latin1
+  set encoding=utf-8
+  set fileencoding=utf-8
+  set bomb
+  set termencoding=utf-8
+  set fileencodings=utf-8,chinese,latin1
 else
-	echoerr "Sorry, this version of (g)vim was not compiled with +multi_byte"
+  echoerr "Sorry, this version of (g)vim was not compiled with +multi_byte"
 endif
 
 if has("win32")
-	set fileencoding=chinese
+  set fileencoding=chinese
 else
-	set fileencoding=utf-8
+  set fileencoding=utf-8
 endif
 execute pathogen#infect()
 syntax on
@@ -43,13 +43,18 @@ set nobackup
 set noswapfile
 
 if has("autocmd") && !has("win32")
- au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
- au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
- au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
+  au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
+  au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
+  au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
 endif
 call pathogen#infect()
 colorscheme codeschool
 function! Startup()
+  if has("gui_running")
+    " GUI is running or is about to start.
+    " Maximize gvim window.
+    set lines=999 columns=999
+  endif
   if 0 == argc()
     NERDTree
   endif
