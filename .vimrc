@@ -39,6 +39,8 @@ inoremap [[	[
 inoremap [] []
 nnoremap gp `[v`]
 nmap <F8> :TagbarToggle<CR>
+nmap <F9> :NERDTreeToggle<CR>
+nmap <F10> :NERDTree<CR>
 set hlsearch
 set nobackup
 set noswapfile
