@@ -37,6 +37,7 @@ inoremap [	[]<Left>
 inoremap [<CR>	[<CR>]<Esc>O
 inoremap [[	[
 inoremap [] []
+nnoremap gp `[v`]
 nmap <F8> :TagbarToggle<CR>
 set hlsearch
 set nobackup
