@@ -24,7 +24,17 @@ filetype indent on
 set expandtab
 set tabstop=2
 set shiftwidth=2
+set hlsearch
+set nobackup
+set noswapfile
+set ignorecase
+set smartcase
+set hlsearch
+set textwidth=79
+set colorcolumn=85
+
 let mapleader=","
+
 inoremap {	{}<Left>
 inoremap {<CR>	{<CR>}<Esc>O
 inoremap {{	{
@@ -37,14 +47,28 @@ inoremap [	[]<Left>
 inoremap [<CR>	[<CR>]<Esc>O
 inoremap [[	[
 inoremap [] []
-nnoremap gp `[v`]
 nmap <F8> :TagbarToggle<CR>
 nmap <F9> :NERDTreeToggle<CR>
 nmap <F10> :NERDTree<CR>
-set hlsearch
-set nobackup
-set noswapfile
 
+nnoremap gp `[v`]
+" move up in screen line
+nnoremap j gj
+" move down in screen line
+nnoremap k gk
+" delete highlight of search
+nnoremap <leader><space> :noh<cr>
+" fold tag
+nnoremap <leader>ft Vatzf
+" paste external text
+nnoremap <leader>p "*p
+" select last pasted text
+nnoremap <leader>v V`]
+" movements between window
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 if has("autocmd") && !has("win32")
   au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
   au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
